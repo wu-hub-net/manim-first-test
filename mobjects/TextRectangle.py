@@ -2,9 +2,9 @@ from manim import *
 
 class TextRectangle(VGroup):
   text_scale=0.5
-  def __init__(self, rect_color=RED, front_color=RED, text='null', width=2, height=2,text_scale=0.5,**kwargs):
+  def __init__(self, rect_color=RED, front_color=WHITE, text='null', width=2, height=2,text_scale=0.5,**kwargs):
     super().__init__(**kwargs)
-    rectangle = Rectangle(width=width, height=height, color=rect_color)
+    rectangle = Rectangle(width=width, height=height, color=rect_color,fill_opacity=0.5)
     text = Text(text, opacity=0.5, color=front_color).scale(text_scale)
     text.move_to(rectangle.get_center())
     self.add(rectangle, text)
