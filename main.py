@@ -31,4 +31,7 @@ class Main(Scene):
     self.wait(0.3)
     self.play(stack.push(trect4))
     self.wait(1)
-    
+    self.play(stack.pop())
+    self.wait(0.3) 
+    self.play(stack.pop())   
+    self.wait(0.3)
