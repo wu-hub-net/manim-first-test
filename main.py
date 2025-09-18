@@ -1,16 +1,24 @@
 from manim import *
 from mobjects.TextRectangle import TextRectangle
+from mobjects.MobStack import MobStack
 class Main(Scene):
   def construct(self):
-    trect = TextRectangle(text='文本矩形')
-    self.play(Create(trect))
+    trect1 = TextRectangle(text='文本矩形1',text_scale=0.3,width=1,height=0.5)
+    trect2 = TextRectangle(text='文本矩形2',text_scale=0.3,width=1,height=0.5)
+    trect3 = TextRectangle(text='文本矩形3',text_scale=0.3,width=1,height=0.5)
+    trect4 = TextRectangle(text='文本矩形4',text_scale=0.3,width=1,height=0.5)
+    trect2.to_edge(LEFT)
+    trect3.to_edge(UP)
+    trect4.to_edge(DOWN)
+    self.play(FadeIn(trect1,trect2,trect3,trect4))
+    stack = MobStack()
     self.wait(1)
-    self.play(trect.change_rect_color(BLUE))
+    self.play(stack.push(trect1))
     self.wait(1)
-    self.play(trect.change_width(4))
+    self.play(stack.push(trect2))
     self.wait(1)
-    self.play(trect.change_height(1))
+    self.play(stack.push(trect3))
     self.wait(1)
-    self.play(trect.change_text('新文本'))
+    self.play(stack.push(trect4))
     self.wait(1)
-    self.wait(1)
+    
