@@ -1,37 +1,51 @@
 from manim import *
 from mobjects.TextRectangle import TextRectangle
 from mobjects.MobStack import MobStack
+from mobjects.TextCircle import TextCircle
+from mobjects.CircleTree import CircleTree
 class Main(Scene):
   def construct(self):
-    trect1 = TextRectangle(text='文本矩形1',text_scale=0.3,width=1,height=0.5)
-    trect2 = TextRectangle(text='文本矩形2',text_scale=0.3,width=1,height=0.5)
-    trect3 = TextRectangle(text='文本矩形3',text_scale=0.3,width=1,height=0.5)
-    trect4 = TextRectangle(text='文本矩形4',text_scale=0.3,width=1,height=0.5)
-    trect1.to_edge(RIGHT)
-    trect2.to_edge(LEFT)
-    trect3.to_edge(UP)
-    trect4.to_edge(DOWN)
-    self.play(FadeIn(trect1,trect2,trect3,trect4))
+    # 创建所有节点
+    root_rect = TextRectangle(text="根节点", width=1, height=0.5)
+    left_rect = TextRectangle(text="左孩子", width=1, height=0.5)
+    right_rect = TextRectangle(text="右孩子", width=1, height=0.5)
+    left_left_rect = TextRectangle(text="左左", width=1, height=0.5)
+    left_right_rect = TextRectangle(text="左右", width=1, height=0.5)
+    right_left_rect = TextRectangle(text="右左", width=1, height=0.5)
+    right_right_rect = TextRectangle(text="右右", width=1, height=0.5)
+
+    rectangles = [right_right_rect, right_left_rect, left_right_rect, left_left_rect, right_rect, left_rect, root_rect]
+
+    # 创建栈
     stack = MobStack()
+    self.add(stack)
     self.play(stack.stack_init())
-    self.wait(1)
-    self.play(stack.push_prepare(trect1))
-    self.wait(0.3)
-    self.play(stack.push(trect1))
-    self.wait(1)
-    self.play(stack.push_prepare(trect2))
-    self.wait(0.3)
-    self.play(stack.push(trect2))
-    self.wait(1)
-    self.play(stack.push_prepare(trect3))
-    self.wait(0.3)
-    self.play(stack.push(trect3))
-    self.wait(1)
-    self.play(stack.push_prepare(trect4))
-    self.wait(0.3)
-    self.play(stack.push(trect4))
-    self.wait(1)
-    self.play(stack.pop())
-    self.wait(0.3) 
-    self.play(stack.pop())   
-    self.wait(0.3)
+    for rect in rectangles:
+        self.play(stack.push(rect))
+
+    # 创建树
+    tree = CircleTree()
+    def transform(rect, circle, parent=None, offset=DOWN):
+        circle.move_to(rect.get_center())
+        circle.shift(UP*0.5)
+        self.play(ReplacementTransform(rect, circle))
+        self.play(tree.add_tree_node_animate(circle, parent=parent, offset=offset))
+        stack.pop_not_change()
+
+    # 第一层
+    root_circle = TextCircle(text="根节点", radius=0.5)
+    transform(root_rect, root_circle)
+    # 第二层
+    left_circle = TextCircle(text="左孩子", radius=0.5)
+    transform(left_rect, left_circle, parent=root_circle, offset=2*LEFT + DOWN)
+    right_circle = TextCircle(text="右孩子", radius=0.5)
+    transform(right_rect, right_circle, parent=root_circle, offset=2*RIGHT + DOWN)
+    # 第三层
+    left_left_circle = TextCircle(text="左左", radius=0.5)
+    transform(left_left_rect, left_left_circle, parent=left_circle, offset=LEFT + DOWN)
+    left_right_circle = TextCircle(text="左右", radius=0.5)
+    transform(left_right_rect, left_right_circle, parent=left_circle, offset=RIGHT + DOWN)
+    right_left_circle = TextCircle(text="右左", radius=0.5)
+    transform(right_left_rect, right_left_circle, parent=right_circle, offset=LEFT + DOWN)
+    right_right_circle = TextCircle(text="右右", radius=0.5)
+    transform(right_right_rect, right_right_circle, parent=right_circle, offset=RIGHT + DOWN)
