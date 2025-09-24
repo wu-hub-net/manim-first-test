@@ -26,4 +26,4 @@ class TextRectangle(TextShape):
       return self.__width
     
     def get_height(self):
-      return self.__height 
+      return self.__height

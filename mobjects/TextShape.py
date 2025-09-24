@@ -5,7 +5,7 @@ class TextShape(VGroup):
         super().__init__(**kwargs)
         shape.set_color(color)
         shape.set_fill(color, opacity=0.5)
-        text_obj = Text(text, opacity=0.5, color=front_color).scale(text_scale)
+        text_obj = Text(text, opacity=0.5, color=front_color,font="Consolas").scale(text_scale)
         text_obj.move_to(shape.get_center())
         self.add(shape, text_obj)
         self.__shape = shape
@@ -21,6 +21,9 @@ class TextShape(VGroup):
     def set_front_color(self, color):
         self.__front_color = color
         self[1].set_color(color)
+
+    def set_top_text(self,buff=0.2):
+        self[1].next_to(self[0], UP,buff=buff)
 # set-animate
     def change_shape_color(self, color):
         self.__color = color
@@ -34,6 +37,9 @@ class TextShape(VGroup):
         self.__text = text
         new_text = Text(text, color=self.__front_color).scale(self.__text_scale).move_to(self[0].get_center())
         return ReplacementTransform(self[1], new_text)
+    
+    def change_top_text(self,buff=0.2):
+        return self[1].animate.next_to(self[0], UP,buff=buff)
 # get
     def get_shape_color(self):
         return self.__color
